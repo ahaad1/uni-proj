@@ -32,12 +32,9 @@ public abstract class Person {
     @Column(nullable = false, unique = false)
     private Integer age;
 
-//    @Column(nullable = false, unique = false, insertable = false, updatable = false)
-    @Column
     @CreationTimestamp
     private OffsetDateTime createdAt;
 
-//    @Column(nullable = false, unique = false, insertable = false, updatable = false)
     @Column
     @UpdateTimestamp
     private OffsetDateTime updatedAt;
