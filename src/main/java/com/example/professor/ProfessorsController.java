@@ -1,5 +1,6 @@
 package com.example.professor;
 
+import com.example.common.models.PageResult;
 import com.example.common.models.ResponseData;
 import com.example.discipline.dtos.DisciplinesDTO;
 import com.example.professor.dtos.CreateProfessorDTO;
@@ -20,9 +21,9 @@ public class ProfessorsController {
     ProfessorsService professorsService;
 
     @GET
-    public ResponseData<List<ProfessorsDTO>> getAll(@QueryParam("page") @DefaultValue("0") int page,
-                                                    @QueryParam("size") @DefaultValue("20") int size){
-        return this.professorsService.getAll(page, size);
+    public ResponseData<PageResult<ProfessorsDTO>> getAllPaged(@QueryParam("page") @DefaultValue("0") int page,
+                                                               @QueryParam("size") @DefaultValue("20") int size){
+        return this.professorsService.getAllPaged(page, size);
     }
 
     @GET

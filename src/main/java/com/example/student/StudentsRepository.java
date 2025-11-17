@@ -1,5 +1,6 @@
 package com.example.student;
 
+import com.example.common.models.PageResult;
 import com.example.professor.Professor;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
@@ -15,8 +16,15 @@ import java.util.UUID;
 @ApplicationScoped
 public class StudentsRepository implements PanacheRepositoryBase<Student, UUID> {
 
-    public List<Student> findAllPaged(int page, int size) {
-        return findAll().page(Page.of(page, size)).list();
+    public PageResult<Student> findAllPaged(int page, int size) {
+        var query = findAll();
+        long total = query.count();
+        List<Student> content = query.page(Page.of(page, size)).list();
+        return new PageResult<>(content, total, page, size);
+    }
+
+    public Student findOne(UUID id){
+        return findById(id);
     }
 
     @Transactional

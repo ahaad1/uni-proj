@@ -1,5 +1,7 @@
 package com.example.professor;
 
+import com.example.common.models.PageResult;
+import com.example.discipline.DisciplinesSchema;
 import com.example.discipline.dtos.DisciplinesDTO;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Page;
@@ -14,19 +16,26 @@ import java.util.UUID;
 @ApplicationScoped
 public class ProfessorsRepository implements PanacheRepositoryBase<Professor, UUID> {
 
-    public List<Professor> findAllPaged(int page, int size) {
-        return findAll().page(Page.of(page, size)).list();
+    public PageResult<Professor> findAllPaged(int page, int size) {
+        var query = findAll();
+        long total = query.count();
+        List<Professor> content = query.page(Page.of(page, size)).list();
+        return new PageResult<>(content, total, page, size);
+    }
+
+    public Professor getOne(UUID id) {
+        return findById(id);
     }
 
     @Transactional
-    public Professor create(Professor professor){
+    public Professor create(Professor professor) {
         persist(professor);
         return professor;
     }
 
     @Transactional
     public Professor update(Professor professor) {
-        return  getEntityManager().merge(professor);
+        return getEntityManager().merge(professor);
     }
 
     @Transactional
@@ -34,9 +43,8 @@ public class ProfessorsRepository implements PanacheRepositoryBase<Professor, UU
         return deleteById(id);
     }
 
-    public DisciplinesDTO getDisciplinesByProfessorId(UUID professorId) {
+    public DisciplinesSchema getDisciplineForProfessor(UUID professorId) {
         Professor professor = findById(professorId);
-        if(professor == null) return null;
-        return new DisciplinesDTO(professor.getDiscipline());
+        return professor != null ? professor.getDiscipline() : null;
     }
 }

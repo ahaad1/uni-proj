@@ -1,9 +1,12 @@
 package com.example.student;
 
 
+import com.example.common.models.PageResult;
 import com.example.common.models.ResponseData;
 import com.example.professor.dtos.ProfessorsDTO;
+import com.example.student.dtos.CreateStudentDTO;
 import com.example.student.dtos.StudentDTO;
+import com.example.student.dtos.UpdateStudentDTO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -22,36 +25,39 @@ public class StudentsController {
 
 
     @GET
-    public ResponseData<List<StudentDTO>> getAll(@QueryParam("page") @DefaultValue("0") int page, @QueryParam("size") @DefaultValue("20") int size) {
-        return this.studentsService.getAllPaged(page, size);
+    public ResponseData<PageResult<StudentDTO>> getAll(
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("size") @DefaultValue("20") int size
+    ) {
+        return studentsService.getAllPaged(page, size);
     }
 
     @GET
     @Path("/{id}")
     public ResponseData<StudentDTO> getOne(@PathParam("id")UUID id) {
-        return this.studentsService.getOne(id);
+        return studentsService.getOne(id);
     }
 
     @POST
-    public ResponseData<StudentDTO> create(StudentDTO studentDTO){
-        return this.studentsService.create(studentDTO);
+    public ResponseData<StudentDTO> create(CreateStudentDTO studentDTO){
+        return studentsService.create(studentDTO);
     }
 
     @PATCH
     @Path("/{id}")
-    public ResponseData<StudentDTO> update(@PathParam("id")UUID id, StudentDTO studentDTO){
-        return this.studentsService.update(id, studentDTO);
+    public ResponseData<StudentDTO> update(@PathParam("id")UUID id, UpdateStudentDTO studentDTO){
+        return studentsService.update(id, studentDTO);
     }
 
     @DELETE
     @Path("/{id}")
     public ResponseData<Void> delete(@PathParam("id")UUID id){
-        return this.studentsService.delete(id);
+        return studentsService.delete(id);
     }
 
     @GET
     @Path("/{id}/professors")
     public ResponseData<List<ProfessorsDTO>> getProfessorsByStudentId(@PathParam("id") UUID id) {
-        return this.studentsService.getProfessorsByStudentId(id);
+        return studentsService.getProfessorsByStudentId(id);
     }
 }
